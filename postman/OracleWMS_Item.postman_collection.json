@@ -1,0 +1,61 @@
+{
+  "info": {
+    "name": "Oracle WMS Cloud - Item",
+    "description": "Carga de items en Oracle WMS Cloud. Llenar las variables de la coleccion (base_url, env, wms_user, wms_password).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "basic",
+    "basic": [
+      {"key": "username", "value": "{{wms_user}}", "type": "string"},
+      {"key": "password", "value": "{{wms_password}}", "type": "string"}
+    ]
+  },
+  "variable": [
+    {"key": "base_url", "value": "https://TU_HOST.wms.ocs.oraclecloud.com"},
+    {"key": "env", "value": "diunsa_test"},
+    {"key": "wms_user", "value": ""},
+    {"key": "wms_password", "value": ""},
+    {"key": "company_code", "value": "DIUNSA"}
+  ],
+  "item": [
+    {
+      "name": "1. Crear item (XML - init_stage_interface)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {"key": "Content-Type", "value": "application/x-www-form-urlencoded"},
+          {"key": "Accept", "value": "application/json"}
+        ],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {"key": "async", "value": "false", "type": "text"},
+            {"key": "xml_data", "type": "text", "value": "<LgfData>\n  <Header>\n    <DocumentVersion>26B</DocumentVersion>\n    <OriginSystem>Host</OriginSystem>\n    <ClientEnvCode>diunsa</ClientEnvCode>\n    <ParentCompanyCode>*</ParentCompanyCode>\n    <Entity>item</Entity>\n    <TimeStamp>{{$isoTimestamp}}</TimeStamp>\n    <MessageId>ITEM_{{$timestamp}}</MessageId>\n  </Header>\n  <ListOfItems>\n    <item>\n      <company_code>{{company_code}}</company_code>\n      <item_alternate_code>4069987569623</item_alternate_code>\n      <part_a>4069987569623</part_a>\n      <description>ITEM DE PRUEBA</description>\n      <barcode>4069987569623</barcode>\n      <unit_length>1</unit_length>\n      <unit_width>1</unit_width>\n      <unit_height>1</unit_height>\n      <unit_weight>0.45</unit_weight>\n      <std_pack_qty>1</std_pack_qty>\n      <std_case_qty>1</std_case_qty>\n      <action_code>CREATE</action_code>\n    </item>\n  </ListOfItems>\n</LgfData>"}
+          ]
+        },
+        "url": {
+          "raw": "{{base_url}}/{{env}}/wms/api/init_stage_interface/",
+          "host": ["{{base_url}}"],
+          "path": ["{{env}}", "wms", "api", "init_stage_interface", ""]
+        }
+      }
+    },
+    {
+      "name": "2. Consultar item (GET lgfapi v10)",
+      "request": {
+        "method": "GET",
+        "header": [{"key": "Accept", "value": "application/json"}],
+        "url": {
+          "raw": "{{base_url}}/{{env}}/wms/lgfapi/v10/entity/item/?company_id__code={{company_code}}&code=4069987569623",
+          "host": ["{{base_url}}"],
+          "path": ["{{env}}", "wms", "lgfapi", "v10", "entity", "item", ""],
+          "query": [
+            {"key": "company_id__code", "value": "{{company_code}}"},
+            {"key": "code", "value": "4069987569623"}
+          ]
+        }
+      }
+    }
+  ]
+}
